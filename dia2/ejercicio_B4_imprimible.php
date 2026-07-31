@@ -10,6 +10,24 @@ interface Imprimible
 class Factura implements Imprimible
 {
     private string $numero;
+    private float $total;
+
+    public function __construct(string $numero, float $total)
+    {
+        $this->numero = $numero;
+        $this->total = $total;
+    }
+
+    public function imprimir(): string
+    {
+        return "Factura #{$this->numero} - Total: \${$this->total}";
+    }
+}
+
+// 3. Clase Recibo que implementa Imprimible (sin herencia con Factura)
+class Recibo implements Imprimible
+{
+    private string $numero;
     private float $monto;
 
     public function __construct(string $numero, float $monto)
@@ -20,30 +38,21 @@ class Factura implements Imprimible
 
     public function imprimir(): string
     {
-        return "FACTURA {$this->numero} - Total: $" . number_format($this->monto, 2);
+        return "Recibo de pago #{$this->numero} - Monto: \${$this->monto}";
     }
 }
 
-// 3. Clase Recibo que implementa Imprimible
-class Recibo implements Imprimible
+// 4. Función polimórfica: solo imprime lo que cumple el contrato
+function imprimirTodos(array $items): void
 {
-    private string $concepto;
-    private float $monto;
-
-    public function __construct(string $concepto, float $monto)
-    {
-        $this->concepto = $concepto;
-        $this->monto = $monto;
-    }
-
-    public function imprimir(): string
-    {
-        return "RECIBO por {$this->concepto} - $" . number_format($this->monto, 2);
+    foreach ($items as $item) {
+        if ($item instanceof Imprimible) {
+            echo $item->imprimir() . PHP_EOL;
+        }
     }
 }
 
-// 4. Función polimórfica auxiliar
-function procesarImpresion(Imprimible $doc): void
-{
-    echo $doc->imprimir() . PHP_EOL;
-}
+$factura = new Factura("001", 125.50);
+$recibo = new Recibo("045", 60.00);
+
+imprimirTodos([$factura, $recibo]);

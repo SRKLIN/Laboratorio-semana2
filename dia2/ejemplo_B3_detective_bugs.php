@@ -1,39 +1,28 @@
 <?php
 
-class Persona
+class TareaBuggy
 {
-    #cambiamos a protected en vez de private 
-    protected string $nombre;
+    private string $titulo; // error 1: debería ser protected
 
-    public function __construct(string $nombre)
+    public function __construct(string $titulo)
     {
-        $this->nombre = $nombre;
-    }
-
-    public function getNombre(): string
-    {
-        return $this->nombre;
+        $this->titulo = $titulo;
     }
 }
 
-class Estudiante extends Persona
+class TareaUrgenteBuggy extends TareaBuggy
 {
-    private string $carnet;
+    public string $fechaLimite;
 
-    public function __construct(string $nombre, string $carnet)
+    public function __construct(string $titulo, string $fechaLimite)
     {
-        #constructor 
-        parent::__construct($nombre);
-        $this->carnet = $carnet;
-    }
-
-    public function getCarnet(): string
-    {
-        return $this->carnet;
+        // error 2: falta parent::__construct($titulo);
+        $this->fechaLimite = $fechaLimite;
+        $this->titulo = $titulo;
     }
 }
 
-#probamos que funcione 
-$est = new Estudiante("Kevin Martínez", "2026-ISC-0198");
+$u = new TareaUrgenteBuggy("Entregar Lab I", "2026-08-11");
 
-echo "Estudiante: " . $est->getNombre() . " (carné " . $est->getCarnet() . ")" . PHP_EOL;
+echo "Resultado de var_dump() sobre el objeto con errores:" . PHP_EOL;
+var_dump($u);

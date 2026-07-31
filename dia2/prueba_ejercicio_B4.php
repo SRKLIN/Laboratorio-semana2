@@ -1,20 +1,26 @@
 <?php
+require __DIR__ . '/ejercicio_B4_imprimible.php';
 
-require_once __DIR__ . '/ejercicio_B4_imprimible.php';
-
-echo "--- Iniciando Pruebas B4---" . PHP_EOL;
-
-#instancias de prueba
-$factura = new Factura("F001", 150.00);
-$recibo = new Recibo("Inscripción ciclo 02-2026", 75.50);
-
-#Verificación 
-if ($factura instanceof Imprimible && $recibo instanceof Imprimible) {
-    echo "Ambas clases implementan la interfaz Imprimible." . PHP_EOL;
-} else {
-    echo "Alguna clase no está implementando la interfaz Imprimible." . PHP_EOL;
+echo PHP_EOL . "=== PRUEBA DE VERIFICACIÓN: Ejercicio B.4 ===" . PHP_EOL;
+$pasadas = 0; $total = 0;
+function verificar(string $d, bool $c): void {
+    global $pasadas, $total; $total++;
+    if ($c) { $pasadas++; echo "PASÓ: $d" . PHP_EOL; }
+    else { echo "FALLÓ: $d" . PHP_EOL; }
 }
 
-echo PHP_EOL . "--- Salida de impresión ---" . PHP_EOL;
-procesarImpresion($factura);
-procesarImpresion($recibo);
+$factura = new Factura("002", 200.0);
+$recibo = new Recibo("099", 60.0);
+
+verificar("Factura implementa Imprimible", $factura instanceof Imprimible);
+verificar("Recibo implementa Imprimible", $recibo instanceof Imprimible);
+
+ob_start();
+imprimirTodos([$factura, $recibo, new stdClass()]);
+$salida = ob_get_clean();
+
+verificar("imprimirTodos() imprime la línea correspondiente a la factura", str_contains($salida, "002"));
+verificar("imprimirTodos() imprime la línea correspondiente al recibo", str_contains($salida, "099"));
+verificar("imprimirTodos() no genera error con un objeto que no implementa Imprimible", true);
+
+echo PHP_EOL . "Resultado: $pasadas de $total pruebas aprobadas." . PHP_EOL;

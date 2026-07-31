@@ -1,0 +1,9 @@
+{
+    "name": "uped/tarea-moodle",
+    "description": "Tarea Semana 2 — dominio de objetos de TaskBoard",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    }
+}
